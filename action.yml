@@ -1,0 +1,14 @@
+name: "YAKS Tools"
+description: "Install YAKS client"
+author: "YAKS developers"
+branding:
+  color: yellow
+  icon: package
+inputs:
+  version:
+    description: "The YAKS version to use (default: latest)"
+  github_token:
+    description: "Optional token used when fetching the latest YAKS release to avoid hitting rate limits"
+runs:
+  using: "node12"
+  main: "main.js"

@@ -32,7 +32,7 @@ EOF
 main() {
     local version="$DEFAULT_VERSION"
     local github_token=
-    
+
     parse_command_line "$@"
 
     install_yaks
@@ -88,8 +88,27 @@ install_yaks() {
         fi
         info="=$install_version"
     fi
+
+    if [[ "$version" = "nightly" ]]
+    then
+        if [[ -z "$github_token" ]]
+        then
+            install_version=$(curl --silent "https://api.github.com/repos/citrusframework/yaks/releases" | grep '"tag_name":' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+        else
+            install_version=$(curl -H "Authorization: $github_token" --silent "https://api.github.com/repos/citrusframework/yaks/releases" | grep '"tag_name":' | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+        fi
+        info="=$install_version"
+    fi
+
+    if [[ "$version" == "nightly:"* ]]
+    then
+        install_version=$(echo $install_version | tr -d nightly:)
+    fi
+
     os=$(get_os)
     binary_version=$(echo $install_version | tr -d v)
+
+    echo "Loading citrusframework/yaks/releases/download/$install_version/yaks-$binary_version-$os-64bit.tar.gz"
 
     echo "Installing YAKS client version $version$info on $os..."
 

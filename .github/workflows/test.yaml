@@ -1,6 +1,7 @@
 name: Test
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
@@ -14,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Install YAKS
         uses: ./
@@ -24,7 +25,7 @@ jobs:
         run: |
           yaks version
 
-  test-default:
+  test-latest:
     strategy:
       matrix:
         os:
@@ -34,7 +35,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Install YAKS
         uses: ./
@@ -46,7 +47,7 @@ jobs:
         run: |
           yaks version
 
-  test-with-custom-version:
+  test-custom-version:
     strategy:
       matrix:
         os:
@@ -54,11 +55,13 @@ jobs:
         - macos-latest
         - windows-latest
         version:
-        - v0.4.0
+        - v0.15.1
+        - nightly
+        - nightly:0.15.0-202303270035
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Install YAKS
         with:
